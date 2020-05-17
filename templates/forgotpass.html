@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<title>Complain Registration ForgotPass</title>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/util.css') }}">
+	<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/main.css') }}">
+
+
+<!-- Google Fonts -->
+<link href="https://fonts.googleapis.com/css?family=Fondamento&display=swap" rel="stylesheet">
+</head>
+<body>
+
+
+
+		<div class="limiter">
+			<div class="container-login100">
+				<div class="wrap-login100 p-l-85 p-r-85 p-t-55 p-b-55">
+					<form class="login100-form validate-form flex-sb flex-w" method="POST">
+
+            <span style="text-align: center; font-size:26px" class="login100-form-title p-b-32">
+              Forgot Your Password
+            </span>
+
+
+          <span class="txt1 p-b-11">
+            {{ form.email.label }}
+          </span>
+          <div class="wrap-input100 validate-input m-b-12" data-validate = "Username is required">
+						{{ form.email(class='input100') }}
+            <span class="focus-input100"></span>
+          </div>
+
+
+                   <br><br>
+          					<div class="container-login100-form-btn">
+											{{ form.submit(class='login100-form-btn', id='login_btn') }}
+				   					</div>
+          					<br><br>
+
+          	</form>
+                     <br>
+          					<p class="txt3" style="text-align:center"> Don't have an account? <a href="{{ url_for('index') }}">  Sign Up</a></p>
+          			</div>
+          		</div>
+          	</div>
+          </body>
+          </html>
