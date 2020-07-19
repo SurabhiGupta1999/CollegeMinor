@@ -15,7 +15,7 @@
       <div id="mySidenav" class="sidenav">
   <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
   <a href="{{ url_for('student') }}">Home</a>
-  <a href="#">My Profile</a>
+  <a href="{{ url_for('studprofileupdate') }}">My Profile</a>
   <a href="{{ url_for('complainthistory') }}">Complain History</a>
   <a href="{{ url_for('logout') }}">Logout</a>
 </div>
@@ -38,12 +38,6 @@ function closeNav() {
 </script>
 
 
-
-
-        <i class="fas fa-bars"></i>
-
-
-
       <div class="clearfix row text-center">
         <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12">
           <label class="logo">Complain Registration System</label>
@@ -64,11 +58,15 @@ function closeNav() {
 
           <br><br>
 
-              {% for mess in get_flashed_messages() %}
-                <div class="alert alert-primary" role="alert">
-                  {{ mess }}
+          {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+              {% for category, message in messages %}
+                <div class="alert alert-{{ category }} text-center">
+                  {{ message }}
                 </div>
               {% endfor %}
+            {% endif %}
+          {% endwith %}
 
 
 
@@ -82,7 +80,7 @@ function closeNav() {
                   <div class="modal-dialog" role="document">
                     <div class="modal-content">
                       <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalLabel">Register Complaint</h5>
+                        <h5 class="modal-title" id="exampleModalLabel">Register Complain</h5>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                           <span aria-hidden="true">&times;</span>
                         </button>

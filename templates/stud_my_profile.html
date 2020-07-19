@@ -1,12 +1,13 @@
-   <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en" dir="ltr">
   <head>
     <meta charset="utf-8">
     <title>Student Dashboard</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+
     <link rel="stylesheet" href="{{ url_for('static', filename='css/sidenav.css') }}">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
-
 
 
   </head>
@@ -38,48 +39,24 @@ function closeNav() {
 </script>
 
 
-
-
-        <i class="fas fa-bars"></i>
-
-
-
       <div class="clearfix row text-center">
         <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12">
-          <label class="logo">Complain History</label>
+          <label class="logo">Complain Registration System</label>
         </div>
       </div>
 
 
     </nav>
-    <section></section>
+    <section>
+
+    </section>
 
 <br><br>
 
 
 
-<section class="container container-fluid">
-  <div class="clearfix row text-center">
-    <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12">
-      <table>
-        <tr>
-          <th> Category of Complaint </th>
-          <th> Date </th>
-          <th> Complaint Detail </th>
-          <th> Status </th>
-        </tr>
-        {% for complaint in complaintdetail %}
-        <tr>
-          <td> {{ complaint.complaintcategory }} </td>
-          <td> {{ complaint.date }} </td>
-          <td> {{ complaint.message }} </td>
-          <td> {{ complaint.status }} </td>
-        </tr>
-        {% endfor %}
-      </table>
-    </div>
-  </div>
-</section>
+
+
 
 
 

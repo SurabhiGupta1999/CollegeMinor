@@ -3,7 +3,7 @@ from flask import Flask, render_template, request, redirect, url_for, flash, ses
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker, scoped_session
 from flask_bcrypt import Bcrypt
-from forms import SignUpForm, LoginForm, ForgotForm, ComplaintForm
+from forms import SignUpForm, LoginForm, ForgotForm, ComplaintForm, changepassword, complaint_status
 
 
 engine = create_engine("postgres://liscgjktgvoiid:e44ad379dfcc1fce6ed0f3de28c59077c899252c7fe094565383de810e598d80@ec2-52-86-73-86.compute-1.amazonaws.com:5432/d2uiio9chcha1n")
@@ -66,6 +66,17 @@ def index():
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
+
+
+    a_email = session.get('aemail')
+    if a_email:
+        return redirect(url_for('admin'))
+
+    stud_email = session.get('semail')
+    if stud_email:
+        return redirect(url_for('student'))
+
+
     form = LoginForm()
 
     if form.validate_on_submit():
@@ -109,20 +120,123 @@ def logout():
 
 @app.route('/forgot', methods=['GET', 'POST'])
 def forgot():
+
+    a_email = session.get('aemail')
+    if a_email:
+        return redirect(url_for('admin'))
+
+    stud_email = session.get('semail')
+    if stud_email:
+        return redirect(url_for('student'))
+
+
     form = ForgotForm()
 
     if form.validate_on_submit():
         email = form.email.data
         design = form.design.data
 
+        info = db.execute("SELECT * FROM admininfo WHERE email = :email", {"email": email }).fetchone()
+        info_one = db.execute("SELECT * FROM studentinfo WHERE email = :email", {"email": email }).fetchone()
+
+        print(form.email.data)
+
+
+        if design == "admin":
+            if info:
+                session['fpemailOne'] = info.email
+                session['ades'] = "admin"
+                return redirect(url_for('change_password'))
+            else:
+                flash(f'Sorry, your email does not exist, please check again.', 'danger')
+                return redirect(url_for('forgot'))
+        if design == "stud":
+            if info_one:
+                session['fpemailTwo'] = info_one.email
+                session['sdes'] = "stud"
+                return redirect(url_for('change_password'))
+            else:
+                flash(f'Sorry, your email does not exist, please check again.', 'danger')
+                return redirect(url_for('forgot'))
+
+
     return render_template('forgotpass.html', form=form)
 
+
+
+@app.route('/change_password', methods=['GET', 'POST'])
+def change_password():
+
+
+    a_email = session.get('aemail')
+    if a_email:
+        return redirect(url_for('admin'))
+
+    stud_email = session.get('semail')
+    if stud_email:
+        return redirect(url_for('student'))
+
+
+    fpemailOne = session.get('fpemailOne')
+    fpemailTwo = session.get('fpemailTwo')
+    ades = session.get('ades')
+    sdes = session.get('sdes')
+
+
+    cp = changepassword()
+
+    if cp.validate_on_submit():
+        password = cp.password.data
+
+        if ades and fpemailOne is not None:
+            chpa_info = db.execute("SELECT * from admininfo WHERE email = :email AND designation = :design", {"email" : fpemailOne, "design" : ades}).fetchone()
+            if chpa_info:
+                if bcrypt.check_password_hash(chpa_info.password, password) is True:
+                    flash(f'please try a different password, this is your current password', 'danger')
+                    return redirect(url_for('change_password'))
+                else:
+                    hash_password = bcrypt.generate_password_hash(password).decode('utf-8')
+                    db.execute("UPDATE admininfo SET password = :password WHERE email = :email", {"password" : hash_password , "email" : fpemailOne })
+                    flash(f'Your Password has been changed successfully, you can now login.', 'success')
+                    db.commit()
+
+                    return redirect(url_for('login'))
+
+        elif sdes and fpemailTwo is not None:
+            chpa_infoone = db.execute("SELECT * from studentinfo WHERE email = :email AND designation = :design", {"email" : fpemailTwo, "design" : sdes}).fetchone()
+            if chpa_infoone:
+                if bcrypt.check_password_hash(chpa_infoone.password, password) is True:
+                    flash(f'please try a different password, this is your current password', 'danger')
+                    return redirect(url_for('change_password'))
+                else:
+                    hash_password = bcrypt.generate_password_hash(password).decode('utf-8')
+                    db.execute("UPDATE studentinfo SET password = :password WHERE email = :email", {"password" : hash_password , "email" : fpemailTwo })
+                    flash(f'Your Password has been changed successfully, you can now login.', 'success')
+                    db.commit()
+
+                    return redirect(url_for('login'))
+
+
+
+    return render_template('changepassword.html', cp=cp)
 
 
 @app.route('/admin', methods=['GET', 'POST'])
 def admin():
 
-    return render_template('admin.html')
+    stud_complain = db.execute("SELECT * FROM complain").fetchall()
+
+
+
+    return render_template('admin.html', stud_complain=stud_complain)
+
+
+@app.route('/display_complaint/<int:complaint_id>', methods=['GET', 'POST'])
+def display_complaint(complaint_id):
+
+
+    return  render_template('display_complaint.html')
+
 
 
 
@@ -171,3 +285,7 @@ def studprofileupdate():
     stud_email = session.get('semail')
 
     studinfo = db.execute("SELECT * FROM studentinfo WHERE email = :email", {'email' : stud_email}).fetchone()
+
+
+
+    return render_template('stud_my_profile.html', studinfo=studinfo)

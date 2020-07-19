@@ -26,6 +26,10 @@ class ForgotForm(FlaskForm):
     submit = SubmitField('Change your Password')
 
 
+class changepassword(FlaskForm):
+    password = PasswordField('Enter Password', validators=[DataRequired()])
+    submit = SubmitField('Change Password')
+
 
 class ComplaintForm(FlaskForm):
     fname = StringField('Full Name *', validators=[DataRequired()])
@@ -33,7 +37,14 @@ class ComplaintForm(FlaskForm):
     date = DateField('Date', validators=[DataRequired()])
     degree = SelectField(u'Degree*', choices=[('bachelors', 'Bachelors'), ('masters', 'Masters')], validators=[DataRequired()])
     semester = SelectField(u'Semester*', choices=[('first', 'First'), ('second', 'Second'), ('third', 'Third'), ('fourth', 'Fourth'), ('fifth', 'Fifth'), ('sixth', 'Sixth'), ('seventh', 'Seventh'), ('eighth', 'Eighth')], validators=[DataRequired()])
-    complaintcategory = SelectField(u'Complant Category*', choices=[('infrastructure', 'Infrastructure'), ('accounts', 'Accounts'), ('academics', 'Academics'), ('management', 'Management'), ('faculty', 'Faculty'), ('library', 'Library')], validators=[DataRequired()])
-    message = TextAreaField('Enter Complaint Details', validators=[DataRequired(), Length(max=100)])
+    complaintcategory = SelectField(u'Complain Category*', choices=[('infrastructure', 'Infrastructure'), ('accounts', 'Accounts'), ('academics', 'Academics'), ('management', 'Management'), ('faculty', 'Faculty'), ('library', 'Library')], validators=[DataRequired()])
+    message = TextAreaField('Enter Complain Details', validators=[DataRequired(), Length(max=100)])
     #file = MultipleFileField(u'Upload File')
     submit = SubmitField('Submit')
+
+
+
+
+class complaint_status(FlaskForm):
+    status = SelectField(u'Complaint Status', choices=[('Pending', 'Pending'), ('Under Review', 'Under Review'), ('Resolved', 'Resolved')])
+    submit = SubmitField('Update')

@@ -15,7 +15,7 @@
       <div id="mySidenav" class="sidenav">
   <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
   <a href="#">My Profile</a>
-  <a href="#">Logout</a>
+  <a href="{{ url_for('logout') }}">Logout</a>
 </div>
 
 
@@ -57,15 +57,32 @@ function closeNav() {
 
 
 
-    <table id="complainttable">
-      <tr>
-        <th> Ref No. </th>
-        <th> Category </th>
-        <th> Date </th>
-        <th> Detail </th>
-        <th> Status </th>
-      </tr>
-    </table>
+    <section class="container container-fluid">
+      {% for com in stud_complain %}
+        <div class="clearfix row text-center">
+          <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 col-xl-12 my-auto">
+            <table>
+              <tr>
+                <th>Sr. No</th>
+                <th>Name</th>
+                <th></th>
+              </tr>
+              <tr>
+                <td>
+                  {{ com.id }}
+                </td>
+                <td>
+                  {{ com.name }}
+                </td>
+                <td>
+                  <a href="{{ url_for('display_complaint', complaint_id=com.id) }}">Open</a>
+                </td>
+              </tr>
+            </table>
+          </div>
+        </div>
+      {% endfor %}
+    </section>
 
 
 
